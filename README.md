@@ -22,3 +22,20 @@ Initial development.
 ## Author
 
 Favour Innocent
+<style>
+.quality-score {
+  margin-top: 20px;
+  padding: 18px;
+  background: #eef6ff;
+  border-radius: 12px;
+  text-align: center;
+}
+.quality-score h3 {
+  margin: 0 0 10px;
+}
+.quality-score strong {
+  font-size: 32px;
+  color: #2563eb;
+}
+</style>
+
