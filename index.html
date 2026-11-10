@@ -4,24 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WriteWise AI</title>
-
 <style>
 body {
   font-family: Arial, sans-serif;
-  background: #f4f6fb;
+  background: #f4f7fb;
   margin: 0;
-  padding: 25px;
-  color: #20243a;
+  padding: 20px;
+  color: #222;
 }
 .container {
-  max-width: 700px;
+  max-width: 650px;
   margin: 30px auto;
   background: white;
   padding: 25px;
   border-radius: 15px;
-  box-shadow: 0 4px 20px #0001;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
-h1 { color: #5145cd; }
+h1 { color: #2563eb; text-align: center; }
+.subtitle { text-align: center; color: #666; }
 textarea {
   width: 100%;
   height: 180px;
@@ -30,82 +30,114 @@ textarea {
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 16px;
+  resize: vertical;
 }
 button {
-  background: #5145cd;
+  width: 100%;
+  padding: 14px;
+  margin-top: 15px;
+  background: #2563eb;
   color: white;
   border: none;
-  padding: 13px 22px;
   border-radius: 8px;
-  margin-top: 12px;
   font-size: 16px;
+  cursor: pointer;
 }
-#results {
-  margin-top: 20px;
+.results { display: none; margin-top: 25px; }
+.score {
+  background: #eef6ff;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+.score strong {
+  display: block;
+  font-size: 42px;
+  color: #2563eb;
+}
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 15px;
+}
+.stat {
+  background: #f4f7fb;
   padding: 15px;
-  background: #f0efff;
   border-radius: 8px;
-  display: none;
+  text-align: center;
+}
+.stat strong {
+  display: block;
+  font-size: 22px;
+  margin-top: 5px;
+}
+.feedback {
+  background: #f8fafc;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+li { margin-bottom: 10px; }
+footer {
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+  margin-top: 25px;
 }
 </style>
 </head>
-
 <body>
 <div class="container">
-<h1>WriteWise AI ✨</h1>
-<p>Your writing quality evaluation assistant.</p>
+<h1>WriteWise AI</h1>
+<p class="subtitle">Your Writing Quality Evaluation Assistant</p>
 
-<h3>Paste your writing below</h3>
-
-<textarea id="writing" placeholder="Paste your text here..."></textarea>
-
+<textarea id="writingInput" placeholder="Paste your writing here to evaluate its quality..."></textarea>
 <button onclick="evaluateWriting()">Evaluate My Writing</button>
 
-<div id="results"></div>
+<div class="results" id="results">
+<div class="score">
+<h3>Writing Quality Score</h3>
+<strong id="qualityScore">0/100</strong>
+<span id="scoreMessage"></span>
+</div>
+
+<div class="stats">
+<div class="stat">Word Count<strong id="wordCount">0</strong></div>
+<div class="stat">Sentence Count<strong id="sentenceCount">0</strong></div>
+<div class="stat">Character Count<strong id="characterCount">0</strong></div>
+<div class="stat">Average Words/Sentence<strong id="averageWords">0</strong></div>
+</div>
+
+<div class="feedback">
+<h3>Issues Found</h3>
+<ul id="issues"></ul>
+</div>
+
+<div class="feedback">
+<h3>Suggestions for Improvement</h3>
+<ul id="suggestions"></ul>
+</div>
+</div>
+
+<footer>WriteWise AI — Initial Development</footer>
 </div>
 
 <script>
 function evaluateWriting() {
-  const text = document.getElementById("writing").value.trim();
-  const results = document.getElementById("results");
+  const text = document.getElementById("writingInput").value.trim();
 
   if (!text) {
     alert("Please enter some writing first.");
     return;
   }
 
-  const words = text.split(/\s+/).length;
-  const sentences = text.split(/[.!?]+/).filter(s => s.trim()).length;
-  const characters = text.length;
+  const words = text.split(/\s+/).filter(Boolean);
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim());
+  const wordCount = words.length;
+  const sentenceCount = sentences.length;
+  const average = wordCount / sentenceCount;
 
-  results.style.display = "block";
-  results.innerHTML = `
-    <h3>Writing Analysis</h3>
-    <p><strong>Word count:</strong> ${words}</p>
-    <p><strong>Sentence count:</strong> ${sentences}</p>
-    <p><strong>Character count:</strong> ${characters}</p>
-    <p><strong>Average words per sentence:</strong>
-    ${(words / Math.max(sentences, 1)).toFixed(1)}</p>
-    <p>Analysis complete! More evaluation features are coming.</p>
-  `;
-}
-</script>
-</body>
-</html> 
-<style>
-.quality-score {
-  margin-top: 20px;
-  padding: 18px;
-  background: #eef6ff;
-  border-radius: 12px;
-  text-align: center;
-}
-.quality-score h3 {
-  margin: 0 0 10px;
-}
-.quality-score strong {
-  font-size: 32px;
-  color: #2563eb;
-}
-</style>
-
+  let score = 100;
+  let issues = [];
+  let suggestions
