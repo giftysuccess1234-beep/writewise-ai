@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WriteWise AI</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6fb;
+  margin: 0;
+  padding: 25px;
+  color: #20243a;
+}
+.container {
+  max-width: 700px;
+  margin: 30px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px #0001;
+}
+h1 { color: #5145cd; }
+textarea {
+  width: 100%;
+  height: 180px;
+  padding: 12px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+button {
+  background: #5145cd;
+  color: white;
+  border: none;
+  padding: 13px 22px;
+  border-radius: 8px;
+  margin-top: 12px;
+  font-size: 16px;
+}
+#results {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f0efff;
+  border-radius: 8px;
+  display: none;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h1>WriteWise AI ✨</h1>
+<p>Your writing quality evaluation assistant.</p>
+
+<h3>Paste your writing below</h3>
+
+<textarea id="writing" placeholder="Paste your text here..."></textarea>
+
+<button onclick="evaluateWriting()">Evaluate My Writing</button>
+
+<div id="results"></div>
+</div>
+
+<script>
+function evaluateWriting() {
+  const text = document.getElementById("writing").value.trim();
+  const results = document.getElementById("results");
+
+  if (!text) {
+    alert("Please enter some writing first.");
+    return;
+  }
+
+  const words = text.split(/\s+/).length;
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim()).length;
+  const characters = text.length;
+
+  results.style.display = "block";
+  results.innerHTML = `
+    <h3>Writing Analysis</h3>
+    <p><strong>Word count:</strong> ${words}</p>
+    <p><strong>Sentence count:</strong> ${sentences}</p>
+    <p><strong>Character count:</strong> ${characters}</p>
+    <p><strong>Average words per sentence:</strong>
+    ${(words / Math.max(sentences, 1)).toFixed(1)}</p>
+    <p>Analysis complete! More evaluation features are coming.</p>
+  `;
+}
+</script>
+</body>
+</html>
